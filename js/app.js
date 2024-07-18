@@ -8,44 +8,8 @@ createTodoBtn.id = "create-todo-btn";
 createTodoBtn.textContent = "Create TODO";
 
 // Создаем контейнер для отображения TODO
-const container = document.createElement("div");
-container.id = "container";
-
-// Создаем элементы для отображения TODO
-const div1 = document.createElement("div");
-div1.className = "div-container";
-const h2 = document.createElement("h4");
-h2.textContent = "Morning";
-const p = document.createElement("p");
-p.textContent = "have breakfast";
-const deleteBtn = document.createElement("button");
-deleteBtn.className = "delete-btn";
-deleteBtn.textContent = "Delete";
-deleteBtn.onclick = function () {
-  div1.remove();
-};
-div1.appendChild(h2);
-div1.appendChild(p);
-div1.appendChild(deleteBtn);
-
-const div2 = document.createElement("div");
-div2.className = "div-container";
-const h2_2 = document.createElement("h4");
-h2_2.textContent = "mid dat";
-const p_2 = document.createElement("p");
-p_2.textContent = "walking on the street";
-const deleteBtn_2 = document.createElement("button");
-deleteBtn_2.className = "delete-btn";
-deleteBtn_2.textContent = "Delete";
-deleteBtn_2.onclick = function () {
-  div2.remove();
-};
-div2.appendChild(h2_2);
-div2.appendChild(p_2);
-div2.appendChild(deleteBtn_2);
-
-container.appendChild(div1);
-container.appendChild(div2);
+const todoListContainer = document.createElement("div");
+todoListContainer.id = "todo-list-container";
 
 // Добавляем контейнер для TODO к document.body
 document.body.appendChild(todoContainer);
@@ -54,37 +18,63 @@ document.body.appendChild(todoContainer);
 document.body.appendChild(createTodoBtn);
 
 // Добавляем контейнер для отображения TODO к document.body
-document.body.appendChild(container);
+document.body.appendChild(todoListContainer);
 
-let clickCount = 0;
+const todoTitleInput = document.createElement("input");
+todoTitleInput.type = "text";
+todoTitleInput.id = "todo-title";
+
+const todoTitleLabel = document.createElement("div");
+todoTitleLabel.textContent = "TODO Title";
+todoTitleLabel.id = "todo-label";
+
+const todoTextInput = document.createElement("input");
+todoTextInput.type = "text";
+todoTextInput.id = "todo-text";
+
+const todoTextLabel = document.createElement("div");
+todoTextLabel.textContent = "TODO Text";
+todoTextLabel.id = "todo-label";
+todoTextLabel.style.marginTop = "10px";
+
+todoContainer.appendChild(todoTitleLabel);
+todoContainer.appendChild(todoTitleInput);
+todoContainer.appendChild(todoTextLabel);
+todoContainer.appendChild(todoTextInput);
+
+createTodoBtn.disabled = true;
+
+// Проверяем, заполнены ли поля ввода
+todoTitleInput.addEventListener("input", () => {
+  createTodoBtn.disabled = !todoTitleInput.value || !todoTextInput.value;
+});
+todoTextInput.addEventListener("input", () => {
+  createTodoBtn.disabled = !todoTitleInput.value || !todoTextInput.value;
+});
 
 createTodoBtn.addEventListener("click", () => {
-  if (clickCount === 0) {
-    const todoTitleInput = document.createElement("input");
-    todoTitleInput.type = "text";
-    todoTitleInput.id = "todo-title";
+  // Создаем новые элементы для отображения TODO
+  const newDiv = document.createElement("div");
+  newDiv.className = "div-container";
+  const newH = document.createElement("h4");
+  newH.textContent = todoTitleInput.value;
+  const newP = document.createElement("p");
+  newP.textContent = todoTextInput.value;
+  const newDeleteBtn = document.createElement("button");
+  newDeleteBtn.className = "delete-btn";
+  newDeleteBtn.textContent = "Delete";
+  newDeleteBtn.onclick = function () {
+    newDiv.remove();
+  };
+  newDiv.appendChild(newH);
+  newDiv.appendChild(newP);
+  newDiv.appendChild(newDeleteBtn);
 
-    const todoTitleLabel = document.createElement("div");
-    todoTitleLabel.textContent = "TODO Title";
-    todoTitleLabel.id = "todo-label";
+  // Добавляем новый TODO в контейнер
+  todoListContainer.appendChild(newDiv);
 
-    todoContainer.appendChild(todoTitleLabel);
-    todoContainer.appendChild(todoTitleInput);
-
-    clickCount++;
-  } else if (clickCount === 1) {
-    const todoTextInput = document.createElement("input");
-    todoTextInput.type = "text";
-    todoTextInput.id = "todo-text";
-
-    const todoTextLabel = document.createElement("div");
-    todoTextLabel.textContent = "TODO Text";
-    todoTextLabel.id = "todo-label";
-    todoTextLabel.style.marginTop = "10px";
-
-    todoContainer.appendChild(todoTextLabel);
-    todoContainer.appendChild(todoTextInput);
-
-    createTodoBtn.disabled = true;
-  }
+  // Очищаем поля ввода
+  todoTitleInput.value = "";
+  todoTextInput.value = "";
+  createTodoBtn.disabled = true;
 });
